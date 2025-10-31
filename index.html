@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLOE Signal — Client</title>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#111214">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{--bg:#0f1115;--card:#151821;--soft:#1b1f2a;--ink:#f6f7fb;--muted:#9aa3b2;--accent:#7fd1ae;--stroke:#242a36}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#0d0f13,#121520);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;backdrop-filter:saturate(140%) blur(8px);background:rgba(13,15,19,.6);border-bottom:1px solid var(--stroke)}
+.wrap{max-width:980px;margin:0 auto;padding:14px 16px}.brand{display:flex;gap:10px;align-items:center}
+.logo{width:32px;height:32px;border-radius:8px;background:radial-gradient(circle at 30% 30%, #7fd1ae, #3fb58d 60%, #0b6248);box-shadow:0 6px 24px rgba(127,209,174,.35)}
+h1{font-size:18px;margin:0}.grid{display:grid;gap:16px;grid-template-columns:1fr}@media(min-width:860px){.grid{grid-template-columns:1.1fr .9fr}}
+.card{background:var(--card);border:1px solid var(--stroke);border-radius:14px;padding:14px}.card h2{margin:0 0 8px;font-size:16px}
+label{display:block;font-size:12px;color:var(--muted);margin:6px 0 6px}
+input,select,textarea,button{width:100%;padding:12px;border-radius:10px;border:1px solid var(--stroke);background:var(--soft);color:var(--ink);font-size:14px}
+textarea{min-height:120px;resize:vertical}.row{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+.pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--stroke);padding:8px 10px;border-radius:999px;background:var(--soft);font-size:12px;color:var(--muted)}
+.stack{display:flex;gap:8px;flex-wrap:wrap}.btn{cursor:pointer;border:none;background:var(--accent);color:#051712;font-weight:700}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}.btn-danger{background:#ff6b6b;color:#fff}
+canvas{width:100%;height:360px;background:#0b0d12;border-radius:12px;border:1px solid var(--stroke)}
+.muted{color:var(--muted)}.list{display:grid;gap:8px}.item{padding:10px;border:1px dashed var(--stroke);border-radius:10px;background:rgba(255,255,255,.02)}
+footer{opacity:.7;padding:24px 16px;text-align:center;font-size:12px;color:var(--muted)}code.inline{background:#0b0d12;padding:2px 6px;border-radius:6px;border:1px solid var(--stroke)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#0b0d12;border:1px solid var(--stroke);color:var(--muted);font-size:12px}
+.right{margin-left:auto}
+</style></head>
+<body>
+<header><div class="wrap brand"><div class="logo"></div><h1>BLOE Signal — Client (PWA)</h1><span class="right badge" id="status">Offline</span></div></header>
+<main class="wrap">
+  <div class="grid">
+    <section class="card">
+      <h2>Data Harga (CSV) & Konfigurasi</h2>
+      <p class="muted">Tempel CSV OHLCV (kolom: <code class="inline">time,open,high,low,close,volume</code>) atau impor file.</p>
+      <div class="row"><div><label>Pair</label><input id="pair" placeholder="Contoh: TRB/USDT" /></div>
+      <div><label>Timeframe</label><select id="tf"><option>15m</option><option selected>1H</option><option>4H</option><option>1D</option></select></div></div>
+      <div class="row"><div><label>CSV OHLCV</label><textarea id="csv" placeholder="time,open,high,low,close,volume&#10;2025-10-30 10:00,420,430,410,425,12345"></textarea></div>
+      <div><label>Impor File CSV</label><input type="file" id="file" accept=".csv,text/csv" /><div class="stack" style="margin-top:8px">
+        <button class="btn" id="parse">Proses & Hitung Indikator</button><button class="btn btn-outline" id="demo">Muat Demo</button><button class="btn btn-danger" id="clear">Bersihkan</button>
+      </div><div style="margin-top:10px" class="muted">Indikator: EMA(20/50), RSI(14), MACD(12/26/9), ATR(14), Support/Resistance (pivot swing)</div></div></div>
+      <div class="card" style="margin-top:12px"><canvas id="chart"></canvas></div>
+    </section>
+    <section class="card"><h2>Sinyal & Prompt ke ChatGPT</h2><div class="list" id="signals"></div>
+      <div style="margin-top:12px"><label>Prompt Terstruktur (untuk GPT-5)</label><textarea id="prompt" readonly></textarea>
+      <div class="stack" style="margin-top:8px"><button class="btn" id="copy">Salin Prompt</button><button class="btn btn-outline" id="share">Share Prompt (Web Share)</button></div></div>
+      <p class="muted" style="margin-top:8px">Integrasi dilakukan via <b>prompt terstruktur</b>. Paste ke ChatGPT GPT‑5 Thinking untuk validasi.</p>
+    </section>
+  </div>
+</main>
+<footer>&copy; 2025 Cinemora. PWA offline • Aman untuk GitHub Pages/iOS Safari.</footer>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+<script src="app.js" defer></script>
+</body></html>
