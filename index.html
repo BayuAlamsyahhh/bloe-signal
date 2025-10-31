@@ -1,51 +1,150 @@
 <!DOCTYPE html>
-<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BLOE Signal — Client</title>
-<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#111214">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<style>
-:root{--bg:#0f1115;--card:#151821;--soft:#1b1f2a;--ink:#f6f7fb;--muted:#9aa3b2;--accent:#7fd1ae;--stroke:#242a36}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#0d0f13,#121520);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-header{position:sticky;top:0;z-index:5;backdrop-filter:saturate(140%) blur(8px);background:rgba(13,15,19,.6);border-bottom:1px solid var(--stroke)}
-.wrap{max-width:980px;margin:0 auto;padding:14px 16px}.brand{display:flex;gap:10px;align-items:center}
-.logo{width:32px;height:32px;border-radius:8px;background:radial-gradient(circle at 30% 30%, #7fd1ae, #3fb58d 60%, #0b6248);box-shadow:0 6px 24px rgba(127,209,174,.35)}
-h1{font-size:18px;margin:0}.grid{display:grid;gap:16px;grid-template-columns:1fr}@media(min-width:860px){.grid{grid-template-columns:1.1fr .9fr}}
-.card{background:var(--card);border:1px solid var(--stroke);border-radius:14px;padding:14px}.card h2{margin:0 0 8px;font-size:16px}
-label{display:block;font-size:12px;color:var(--muted);margin:6px 0 6px}
-input,select,textarea,button{width:100%;padding:12px;border-radius:10px;border:1px solid var(--stroke);background:var(--soft);color:var(--ink);font-size:14px}
-textarea{min-height:120px;resize:vertical}.row{display:grid;gap:10px;grid-template-columns:1fr 1fr}
-.pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--stroke);padding:8px 10px;border-radius:999px;background:var(--soft);font-size:12px;color:var(--muted)}
-.stack{display:flex;gap:8px;flex-wrap:wrap}.btn{cursor:pointer;border:none;background:var(--accent);color:#051712;font-weight:700}
-.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}.btn-danger{background:#ff6b6b;color:#fff}
-canvas{width:100%;height:360px;background:#0b0d12;border-radius:12px;border:1px solid var(--stroke)}
-.muted{color:var(--muted)}.list{display:grid;gap:8px}.item{padding:10px;border:1px dashed var(--stroke);border-radius:10px;background:rgba(255,255,255,.02)}
-footer{opacity:.7;padding:24px 16px;text-align:center;font-size:12px;color:var(--muted)}code.inline{background:#0b0d12;padding:2px 6px;border-radius:6px;border:1px solid var(--stroke)}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#0b0d12;border:1px solid var(--stroke);color:var(--muted);font-size:12px}
-.right{margin-left:auto}
-</style></head>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BLOE Signal — v3 (CSV + Screenshot)</title>
+  <meta name="description" content="BLOE Signal v3: CSV/Chart Screenshot analyzer + Online AI chat via secure proxy. PWA iOS-ready." />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0b1020" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <style>
+    :root{
+      --bg:#0b1020; --grad1:#0b1228; --grad2:#0f1c3a;
+      --card:#121836; --soft:#0e1530; --ink:#e9f0ff; --muted:#9bb0d0;
+      --accent:#48a8ff; --accent2:#6bf0ff; --stroke:#1d2a52; --danger:#ff6b6b; --good:#8dd36c;
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--ink); background:linear-gradient(160deg,var(--grad1),var(--grad2));}
+    header{position:sticky;top:0;z-index:5;backdrop-filter:saturate(140%) blur(8px);
+      background:rgba(10,15,30,.55); border-bottom:1px solid var(--stroke);}
+    .wrap{max-width:1100px;margin:0 auto;padding:14px 16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:34px;height:34px;border-radius:10px;background:radial-gradient(circle at 30% 30%, var(--accent2), var(--accent) 60%, #1357a6); box-shadow:0 6px 28px rgba(72,168,255,.35)}
+    h1{font-size:18px;margin:0}
+    .badge{margin-left:auto;border:1px solid var(--stroke);padding:4px 8px;border-radius:999px;color:var(--muted);font-size:12px;background:rgba(255,255,255,.02)}
+    main .grid{display:grid;gap:16px;grid-template-columns:1fr}
+    @media(min-width:1100px){ main .grid{grid-template-columns:1.15fr .85fr} }
+    .card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:14px}
+    .card h2{margin:0 0 8px;font-size:16px}
+    label{display:block;font-size:12px;color:var(--muted);margin:6px 0}
+    input,select,textarea,button{width:100%;padding:12px;border-radius:10px;
+      border:1px solid var(--stroke);background:var(--soft);color:var(--ink);font-size:14px}
+    textarea{min-height:120px;resize:vertical}
+    .row{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+    .stack{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{cursor:pointer;border:none;background:var(--accent);color:#031222;font-weight:700}
+    .btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+    .btn-danger{background:var(--danger);color:#fff}
+    canvas{width:100%;height:360px;background:#071022;border-radius:12px;border:1px solid var(--stroke)}
+    .muted{color:var(--muted)}
+    .list{display:grid;gap:8px}
+    .item{padding:10px;border:1px dashed var(--stroke);border-radius:10px;background:rgba(255,255,255,.02)}
+    .tabs{display:flex;gap:8px;margin-bottom:10px}
+    .tab{padding:8px 12px;border:1px solid var(--stroke);border-radius:999px;background:#0b1329;color:var(--muted);cursor:pointer}
+    .tab.active{background:var(--accent);color:#031222;border-color:transparent}
+    .panel{display:none} .panel.active{display:block}
+    .chat{display:flex;flex-direction:column;gap:8px;height:420px;border:1px solid var(--stroke);border-radius:12px;background:#0b1329;padding:10px;overflow:auto}
+    .bubble{max-width:86%;padding:10px;border-radius:12px;line-height:1.4}
+    .me{align-self:flex-end;background:#10254a;border:1px solid #1d385f}
+    .ai{align-self:flex-start;background:#101e3f;border:1px solid #1b2e5a}
+    .shot{width:100%;border:1px dashed var(--stroke);border-radius:12px;background:#091126;display:block;object-fit:contain;max-height:360px}
+    footer{opacity:.75;padding:20px 16px;text-align:center;font-size:12px;color:var(--muted)}
+    code.inline{background:#071022;padding:2px 6px;border-radius:6px;border:1px solid var(--stroke)}
+  </style>
+</head>
 <body>
-<header><div class="wrap brand"><div class="logo"></div><h1>BLOE Signal — Client (PWA)</h1><span class="right badge" id="status">Offline</span></div></header>
-<main class="wrap">
-  <div class="grid">
-    <section class="card">
-      <h2>Data Harga (CSV) & Konfigurasi</h2>
-      <p class="muted">Tempel CSV OHLCV (kolom: <code class="inline">time,open,high,low,close,volume</code>) atau impor file.</p>
-      <div class="row"><div><label>Pair</label><input id="pair" placeholder="Contoh: TRB/USDT" /></div>
-      <div><label>Timeframe</label><select id="tf"><option>15m</option><option selected>1H</option><option>4H</option><option>1D</option></select></div></div>
-      <div class="row"><div><label>CSV OHLCV</label><textarea id="csv" placeholder="time,open,high,low,close,volume&#10;2025-10-30 10:00,420,430,410,425,12345"></textarea></div>
-      <div><label>Impor File CSV</label><input type="file" id="file" accept=".csv,text/csv" /><div class="stack" style="margin-top:8px">
-        <button class="btn" id="parse">Proses & Hitung Indikator</button><button class="btn btn-outline" id="demo">Muat Demo</button><button class="btn btn-danger" id="clear">Bersihkan</button>
-      </div><div style="margin-top:10px" class="muted">Indikator: EMA(20/50), RSI(14), MACD(12/26/9), ATR(14), Support/Resistance (pivot swing)</div></div></div>
-      <div class="card" style="margin-top:12px"><canvas id="chart"></canvas></div>
-    </section>
-    <section class="card"><h2>Sinyal & Prompt ke ChatGPT</h2><div class="list" id="signals"></div>
-      <div style="margin-top:12px"><label>Prompt Terstruktur (untuk GPT-5)</label><textarea id="prompt" readonly></textarea>
-      <div class="stack" style="margin-top:8px"><button class="btn" id="copy">Salin Prompt</button><button class="btn btn-outline" id="share">Share Prompt (Web Share)</button></div></div>
-      <p class="muted" style="margin-top:8px">Integrasi dilakukan via <b>prompt terstruktur</b>. Paste ke ChatGPT GPT‑5 Thinking untuk validasi.</p>
-    </section>
-  </div>
-</main>
-<footer>&copy; 2025 Cinemora. PWA offline • Aman untuk GitHub Pages/iOS Safari.</footer>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
-<script src="app.js" defer></script>
-</body></html>
+  <header>
+    <div class="wrap brand">
+      <div class="logo"></div>
+      <h1>BLOE Signal — v3 (CSV + Screenshot)</h1>
+      <span class="badge" id="status">Offline</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <section class="card">
+        <h2>Analisis Chart</h2>
+        <div class="tabs">
+          <div class="tab active" data-tab="csv">CSV</div>
+          <div class="tab" data-tab="shot">Screenshot</div>
+        </div>
+
+        <!-- CSV PANEL -->
+        <div class="panel active" id="panel-csv">
+          <p class="muted">Tempel CSV OHLCV (kolom: <code class="inline">time,open,high,low,close,volume</code>) atau impor file, lalu klik Proses.</p>
+          <div class="row">
+            <div><label>Pair</label><input id="pair" placeholder="Mis: TRB/USDT" /></div>
+            <div><label>Timeframe</label>
+              <select id="tf">
+                <option>15m</option><option selected>1H</option><option>4H</option><option>1D</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div><label>CSV OHLCV</label><textarea id="csv" placeholder="time,open,high,low,close,volume&#10;2025-10-30 10:00,420,430,410,425,12345"></textarea></div>
+            <div>
+              <label>Impor File CSV</label>
+              <input type="file" id="file" accept=".csv,text/csv" />
+              <div class="stack" style="margin-top:8px">
+                <button class="btn" id="parse">Proses</button>
+                <button class="btn btn-outline" id="demo">Muat Demo</button>
+                <button class="btn btn-danger" id="clear">Bersihkan</button>
+              </div>
+              <div class="muted" style="margin-top:8px">Indikator: EMA(20/50), RSI(14), MACD(12/26/9), ATR(14), Support/Resistance.</div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:12px"><canvas id="chart"></canvas></div>
+          <div class="item" style="margin-top:12px" id="signalBox"></div>
+        </div>
+
+        <!-- SCREENSHOT PANEL -->
+        <div class="panel" id="panel-shot">
+          <p class="muted">Unggah **screenshot chart** (TradingView, exchange, dsb). Aku akan baca polanya dan kirim ke AI.</p>
+          <div class="row">
+            <div><label>Pair (opsional)</label><input id="spair" placeholder="Mis: BTC/USDT" /></div>
+            <div><label>Timeframe (opsional)</label><input id="stf" placeholder="Mis: 1H" /></div>
+          </div>
+          <input type="file" id="shot" accept="image/*" capture="environment" />
+          <img id="shotPreview" class="shot" style="display:none;margin-top:8px" />
+          <div class="stack" style="margin-top:8px">
+            <button class="btn" id="sendShot">Kirim Screenshot ke AI (Vision)</button>
+          </div>
+          <small class="muted">Catatan: gambar akan dikirim lewat proxy ke AI Vision untuk dibaca. Pastikan **Server Proxy URL** di panel kanan sudah diisi.</small>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>AI Assistant</h2>
+        <div class="row">
+          <div>
+            <label>Server Proxy URL</label>
+            <input id="apiUrl" placeholder="Contoh: https://bloe-signal-namamu.workers.dev/api/chat" />
+          </div>
+          <div>
+            <label>Mode</label>
+            <select id="mode">
+              <option value="validate">Validasi & Optimasi Sinyal</option>
+              <option value="freechat">Chat Bebas</option>
+              <option value="vision">Vision (baca Screenshot)</option>
+            </select>
+          </div>
+        </div>
+        <div class="chat" id="chat"></div>
+        <div class="stack" style="margin-top:8px">
+          <input id="userMsg" placeholder="Ketik pesan ke AI..." />
+          <button class="btn" id="ask">Kirim</button>
+          <button class="btn btn-outline" id="sendContext">Kirim Analisis CSV Terbaru</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>&copy; 2025 BLOE Signal v3. PWA offline • Online AI via proxy aman.</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
